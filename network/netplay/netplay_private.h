@@ -413,6 +413,8 @@ struct netplay_connection
    /* fd associated with this connection */
    int fd;
 
+   int client_device;
+
    /* Mode of the connection */
    enum rarch_netplay_connection_mode mode;
 

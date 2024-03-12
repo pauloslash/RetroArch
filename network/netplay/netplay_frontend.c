@@ -4250,6 +4250,7 @@ static void netplay_hangup(netplay_t *netplay,
          netplay->connected_players &= ~(1L<<client_num);
          netplay->connected_slaves  &= ~(1L<<client_num);
          netplay->client_devices[client_num] = 0;
+         //TODO: DEVICE
          for (i = 0; i < MAX_INPUT_DEVICES; i++)
             netplay->device_clients[i] &= ~(1L<<client_num);
       }
@@ -4823,7 +4824,10 @@ static void netplay_handle_play_spectate(netplay_t *netplay,
                      pad.port   = (unsigned)i;
                      pad.device = netplay->config_devices[i];
                      core_set_controller_port_device(&pad);
-                     printf("1Port:%d Device:%d\n", pad.port+1, pad.device+1);
+                     printf("1Port:%d Device:%d\n", pad.port+1, pad.device);
+                     if(pad.device != 1) {
+                         netplay->connections[i].client_device = 0;
+                     }
 
                      netplay->device_share_modes[i] = share_mode;
                   }
@@ -4888,6 +4892,9 @@ static void netplay_handle_play_spectate(netplay_t *netplay,
                   pad.device = netplay->config_devices[i];
                   core_set_controller_port_device(&pad);
                   printf("2Port:%d Device:%d\n", pad.port+1, pad.device+1);
+                   if(pad.device != 1) {
+                      netplay->connections[i].client_device = pad.device;
+                  }
 
                   netplay->device_share_modes[i] = share_mode;
                }
