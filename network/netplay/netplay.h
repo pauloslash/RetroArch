@@ -84,6 +84,7 @@ struct netplay_room
    char mitm_handle[NETPLAY_HOST_STR_LEN];
    char mitm_address[NETPLAY_HOST_LONGSTR_LEN];
    char mitm_session[NETPLAY_HOST_STR_LEN];
+   char players_count[5];
    bool has_password;
    bool has_spectate_password;
    bool connectable;
@@ -109,6 +110,7 @@ struct netplay_host
    char retroarch_version[NETPLAY_HOST_STR_LEN];
    char content[NETPLAY_HOST_LONGSTR_LEN];
    char subsystem_name[NETPLAY_HOST_LONGSTR_LEN];
+   char players_count[NETPLAY_PLAYER_COUNT_LEN];
    bool has_password;
    bool has_spectate_password;
 };

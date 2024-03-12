@@ -143,6 +143,7 @@ static NetplayBonjourMan *nbm_instance;
         strlcpy(host->retroarch_version, [txt[@"retroarch_version"] bytes], [txt[@"retroarch_version"] length] + 1);
         strlcpy(host->content, [txt[@"content"] bytes], [txt[@"content"] length] + 1);
         strlcpy(host->subsystem_name, [txt[@"subsystem_name"] bytes], [txt[@"subsystem_name"] length] + 1);
+        strlcpy(host->players_count, [txt[@"players_count"] bytes], [txt[@"players_count"] length] + 1);
 
         host->has_password = [[[NSString alloc] initWithData:txt[@"has_password"] encoding:NSUTF8StringEncoding] isEqualToString:@"true"];
         host->has_spectate_password = [[[NSString alloc] initWithData:txt[@"has_spectate_password"] encoding:NSUTF8StringEncoding] isEqualToString:@"true"];

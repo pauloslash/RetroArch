@@ -1712,8 +1712,9 @@ static int action_bind_sublabel_netplay_room(file_list_t *list,
    _len += snprintf(s + _len, len - _len,
       ": %s (%s)\n"
       "%s: %s (%s)\n"
+      "%s: %s\n"
       "%s: %s ",
-      !string_is_empty(room->retroarch_version) 
+      !string_is_empty(room->retroarch_version)
       ? room->retroarch_version
       : msg_hash_to_str(MENU_ENUM_LABEL_VALUE_NOT_AVAILABLE),
       (!string_is_empty(room->frontend) &&
@@ -1722,6 +1723,7 @@ static int action_bind_sublabel_netplay_room(file_list_t *list,
             : msg_hash_to_str(MENU_ENUM_LABEL_VALUE_NOT_AVAILABLE),
       msg_hash_to_str(MENU_ENUM_LABEL_VALUE_CONTENT_INFO_CORE_NAME),
       room->corename, room->coreversion,
+                    "PLAYERS", room->players_count,
       msg_hash_to_str(MENU_ENUM_LABEL_VALUE_CONTENT),
       (!string_is_empty(room->gamename) &&
          !string_is_equal_case_insensitive(room->gamename, "N/A"))

@@ -6405,6 +6405,7 @@ static void netplay_refresh_lan_cb(const void *data)
       strlcpy(room->subsystem_name, host->subsystem_name,
          sizeof(room->subsystem_name));
       strlcpy(room->address, host->address, sizeof(room->address));
+      strlcpy(room->players_count, host->players_count, sizeof(room->players_count));
 
       room->has_password          = host->has_password;
       room->has_spectate_password = host->has_spectate_password;

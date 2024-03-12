@@ -231,6 +231,11 @@ static bool netplay_json_object_member(void *ctx, const char *p_value,
             p_ctx->cur_member_string = net_st->rooms_data->cur->subsystem_name;
             p_ctx->cur_member_size   = sizeof(net_st->rooms_data->cur->subsystem_name);
          }
+         else if (string_is_equal(p_value, "player_count"))
+         {
+            p_ctx->cur_member_string = net_st->rooms_data->cur->players_count;
+            p_ctx->cur_member_size   = sizeof(net_st->rooms_data->cur->players_count);
+         }
          else if (string_is_equal(p_value, "connectable"))
          {
             p_ctx->cur_member_bool   = &net_st->rooms_data->cur->connectable;

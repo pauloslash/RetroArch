@@ -7109,6 +7109,7 @@ int runloop_iterate(void)
 #ifdef HAVE_NETWORKING
       want_runahead                     = want_runahead
             && !netplay_driver_ctl(RARCH_NETPLAY_CTL_IS_ENABLED, NULL);
+      netplay_driver_ctl(RARCH_NETPLAY_CTL_SYNC_PLAYER_INFO, NULL);
 #endif
 
       if (want_runahead)

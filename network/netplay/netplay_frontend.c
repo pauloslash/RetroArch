@@ -184,6 +184,7 @@ struct ad_packet
    char     retroarch_version[NETPLAY_HOST_STR_LEN];
    char     content[NETPLAY_HOST_LONGSTR_LEN];
    char     subsystem_name[NETPLAY_HOST_LONGSTR_LEN];
+   char     players_count[NETPLAY_PLAYER_COUNT_LEN];
 };
 
 struct mode_payload
@@ -422,6 +423,8 @@ static bool netplay_lan_ad_client_response(void)
       strlcpy(host->content, ad_packet_buffer.content, sizeof(host->content));
       strlcpy(host->subsystem_name, ad_packet_buffer.subsystem_name,
          sizeof(host->subsystem_name));
+      strlcpy(host->players_count, ad_packet_buffer.players_count,
+         sizeof(host->players_count));
 
       has_password                = ntohl(ad_packet_buffer.has_password);
       host->has_password          = (has_password & 1) ? true : false;
@@ -585,6 +588,21 @@ static bool netplay_lan_ad_server(netplay_t *netplay)
 
       strlcpy(ad_packet_buffer.retroarch_version, PACKAGE_VERSION,
          sizeof(ad_packet_buffer.retroarch_version));
+
+      size_t i;
+      int qtd = 1;
+      for (i = 0; i < net_st->data->connections_size; i++) {
+           struct netplay_connection *conn = &netplay->connections[i];
+
+           if (!(conn->flags & NETPLAY_CONN_FLAG_ACTIVE))
+               continue;
+           if (conn->mode < NETPLAY_CONNECTION_CONNECTED)
+               continue;
+           qtd++;
+       }
+
+      snprintf(ad_packet_buffer.players_count, sizeof(ad_packet_buffer.players_count),
+               "%d", qtd);
 
       if (subsystem && subsystem->size > 0)
       {
@@ -4805,11 +4823,13 @@ static void netplay_handle_play_spectate(netplay_t *netplay,
                      pad.port   = (unsigned)i;
                      pad.device = netplay->config_devices[i];
                      core_set_controller_port_device(&pad);
+                     printf("1Port:%d Device:%d\n", pad.port+1, pad.device+1);
 
                      netplay->device_share_modes[i] = share_mode;
                   }
 
                   netplay->device_clients[i] |= client_mask;
+                  printf("PlayerF%d: ID#%d\n", (i+1), client_mask);
                }
             }
             else
@@ -4867,12 +4887,15 @@ static void netplay_handle_play_spectate(netplay_t *netplay,
                   pad.port   = (unsigned)i;
                   pad.device = netplay->config_devices[i];
                   core_set_controller_port_device(&pad);
+                  printf("2Port:%d Device:%d\n", pad.port+1, pad.device+1);
 
                   netplay->device_share_modes[i] = share_mode;
                }
                netplay->device_clients[i] |= client_mask;
+               printf("Player%d: ID#%d\n", (i+1), client_mask);
             }
             netplay->client_devices[client_num] = devices;
+            printf("Client%d: ID#%d\n\n", (client_num+1), devices);
 
             payload.devices = htonl(devices);
             memcpy(payload.share_modes, netplay->device_share_modes,
@@ -9074,6 +9097,9 @@ bool netplay_driver_ctl(enum rarch_netplay_ctl_state state, void *data)
 
    switch (state)
    {
+      case RARCH_NETPLAY_CTL_SYNC_PLAYER_INFO:
+          ret = false;
+          break;
       case RARCH_NETPLAY_CTL_ENABLE_SERVER:
          if (netplay)
          {
